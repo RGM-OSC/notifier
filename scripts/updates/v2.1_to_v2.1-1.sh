@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ScriptName="v2.1_to_v2.1-1.sh"
-PrevNotifier="/srv/eyesofnetwork/notifier"
-LatestNotifier="/srv/eyesofnetwork/notifier-2.1-1"
+PrevNotifier="/srv/rgm/notifier"
+LatestNotifier="/srv/rgm/notifier-2.1-1"
 NotAction=""
 
 usage () {
@@ -15,12 +15,12 @@ Usage of ${ScriptName} :
                 - Symbolic link update
 
         Example. Considering notifier is previous version and notifier-2.1-1 is latest version :
-                bash ./v2.1_to_v2.1-1.sh /srv/eyesofnetwork/notifier/ /srv/eyesofnetwork/notifier-2.1-1/
+                bash ./v2.1_to_v2.1-1.sh /srv/rgm/notifier/ /srv/rgm/notifier-2.1-1/
 
-        If you don't specify path, this script will use standard EyesOfNetwork notifier paths.
-        The standard EyesOfNetwork ISO deployement path :
-          - /srv/eyesofnetwork/notifier (symbolic link)
-          - /srv/eyesofnetwork/notifier-2.1-1 (folder containing notifier)
+        If you don't specify path, this script will use standard RGM notifier paths.
+        The standard RGM deployement path :
+          - /srv/rgm/notifier (symbolic link)
+          - /srv/rgm/notifier-2.1-1 (folder containing notifier)
 
         Note : This script will automaticaly launch notifier.ruls file check to sort all configuration line with missing arguments.\n"
         exit 128
