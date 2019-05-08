@@ -4,8 +4,8 @@ This is to the original content of file.
 ```xml
 <rules>
     <debug_rules> 2 </debug_rules> 
-    <logrules_file> /srv/eyesofnetwork/notifier/log/notifier_rules.log </logrules_file>
-    <notifsent_file> /srv/eyesofnetwork/notifier/log/notifier_send.log </notifsent_file>
+    <logrules_file> /srv/rgm/notifier/log/notifier_rules.log </logrules_file>
+    <notifsent_file> /srv/rgm/notifier/log/notifier_send.log </notifsent_file>
 
     <host>
     0:*:*:-:*:*:*:*:email:0
@@ -28,11 +28,11 @@ The field **debug\ rules** turn debug on or off. But with specific levels :
 
 ### Logrules file
 This field simply specify path to file will contain debuging log levels (debug 1 or 3)  
-By default, the log is in /srv/eyesofnetwork/notifier/log/notifier\_rules.log
+By default, the log is in /srv/rgm/notifier/log/notifier\_rules.log
 
 ### Notifsent file
 Here, you specify path to file will contain notification sended by notifier (debug 2 or 3).  
-By default, the log is in /srv/eyesofnetwork/notifier/log/notifier\_send.log
+By default, the log is in /srv/rgm/notifier/log/notifier\_send.log
 
 ### Rules
 Same as [notifier.cfg](./notifier.cfg.md), you'll find two fields, **host** and **service**.  
@@ -68,10 +68,10 @@ You have two availables wildcard could be used in rules :
 ### Example
 #### Host
 ```xml
-0:admin:localhost:-:*:mon,tue,wed,thu,fri:0800-1800:1:email
+0:admin:localhost:-:*:mon,tue,wed,thu,fri:0800-1800:1:email:0
 ```
 #### Service
 ```xml
-1:admin:localhost:ssh:*:mon,tue,wed,thu,fri:0800-1800:1:email
+1:admin:localhost:ssh:*:mon,tue,wed,thu,fri:0800-1800:1:email:0
 ```
 
