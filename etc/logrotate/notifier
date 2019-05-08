@@ -3,5 +3,5 @@
 	monthly
 	notifempty
 	compress
-	create 0664 nagios eyesofnetwork
+	create 0664 nagios rgm
 }
