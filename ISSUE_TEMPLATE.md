@@ -5,16 +5,19 @@
 -->
 
 - Notifier version (or commit ref) :  
-- EyesOfNetwork Version :  
+- RGM Version :  
 - Perl version (if not installer from EON iso) :  
 - Operating system (if differ to EON iso) :  
+
 ## Common problems
+
 - Database is correctly initialized and you're on good scheme ? (Look in docs/db/notifier.sql to right scheme according to your version) ?  
 - Have you activate notification tracker ?  
 - Have you check your notifier.rules syntax ?  
 - Have you updated your notifier.rules contact field (according to new work) ?  
 
 ## Description
+
 Please provide here most possible detail on issue.  
 You could paste logs to provide us notifier outputs.
 ...
