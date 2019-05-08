@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 ##
-## Program: notifier.pl v2.1, Rule-based Notification Addon for Nagios(r)
+## Program: notifier.pl v2.1.3, Rule-based Notification Addon for Nagios(r)
 ## License: GPL
 ## Copyleft 2013 Vincent Fricou (vincent.fricou@gmail.com)
 ## Hugely inspired by the excellent work of Yueh-Hung Liu (yuehung.liu@gmail.com)
@@ -32,7 +32,7 @@ $XML::Simple::PREFERRED_PARSER = XML::Parser;
 my $notifier_dur_start = time;
 
 my $data_type;
-my $config_file = "/srv/eyesofnetwork/notifier/etc/notifier.cfg";
+my $config_file = "/srv/rgm/notifier/etc/notifier.cfg";
 my $config;
 my $rules;
 my $debug;
@@ -111,13 +111,13 @@ $nagios_notification_number=$options{Y};
 
 if( $config_file eq "" )
 {
-	$config_file="/srv/eyesofnetwork/notifier/etc/notifier.cfg";
+	$config_file="/srv/rgm/notifier/etc/notifier.cfg";
 }
 
 
 if( $rules_file eq "" )
 {
-	$rules_file="/srv/eyesofnetwork/notifier/etc/notifier.rules";
+	$rules_file="/srv/rgm/notifier/etc/notifier.rules";
 }
 
 
