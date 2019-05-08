@@ -1,7 +1,7 @@
 <rules>
     <debug_rules> 3 </debug_rules> 
-    <logrules_file> /srv/eyesofnetwork/notifier/log/notifier_rules.log </logrules_file>
-    <notifsent_file> /srv/eyesofnetwork/notifier/log/notifier_send.log </notifsent_file>
+    <logrules_file> /srv/rgm/notifier/log/notifier_rules.log </logrules_file>
+    <notifsent_file> /srv/rgm/notifier/log/notifier_send.log </notifsent_file>
 
     <host>
         0:*:*:-:UP:*:*:*:email,sms:1
