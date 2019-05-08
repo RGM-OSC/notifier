@@ -1,4 +1,4 @@
-/srv/eyesofnetwork/notifier/log/notifier_send.log /srv/eyesofnetwork/notifier/log/notifier_rules.log {
+/srv/rgm/notifier/log/notifier_send.log /srv/rgm/notifier/log/notifier_rules.log {
 	missingok
 	monthly
 	notifempty
