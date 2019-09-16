@@ -1,6 +1,6 @@
 # Files permissions
 
-This is the default EyesOfNetwork installation files permissions could be set for notifier correct usage :
+This is the default RGM installation files permissions could be set for notifier correct usage :
 ```bash
 ├── bin                                            # root:root 755
 │   └── notifier.pl                                # root:root 755
@@ -23,16 +23,16 @@ This is the default EyesOfNetwork installation files permissions could be set fo
 │   │   ├── sms-app-ok                             # root:root 644
 │   │   └── sms-app-warning                        # root:root 644
 │   ├── notifier.cfg                               # root:root 644
-│   └── notifier.rules                             # nagios:eyesofnetwork 664
-├── log                                            # nagios:eyesofnetwork 755
-│   ├── notifier_rules.log                         # nagios:eyesofnetwork 644
-│   └── notifier_send.log                          # nagios:eyesofnetwork 644
+│   └── notifier.rules                             # nagios:rgm 664
+├── log                                            # nagios:rgm 755
+│   ├── notifier_rules.log                         # nagios:rgm 644
+│   └── notifier_send.log                          # nagios:rgm 644
 ├── README.md                                      # root:root 644 - Production useless
 ├── scripts                                        # root:root 755
 │   ├── createxml2sms.sh                           # root:root 755
 │   └── updates                                    # root:root 755
 │       ├── check_config_file.sh                   # root:root 755 - No prod run script
-│       └── v2.1_to_v2.1-1.sh                      # root:root 755 - Upgrade script
+│       └── v2.1.2_to_v2.1.3.sh                    # root:root 755 - Upgrade script
 └── var                                            # root:root 644
     └── www                                        # root:root 644
         └── index.html                             # root:root 644

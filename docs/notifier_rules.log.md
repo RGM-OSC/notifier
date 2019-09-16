@@ -4,7 +4,7 @@ This is an example to log file for rules full debug.
 ```
 ********************************************
 date = Mon Jun 24 11:24:05 CEST 2013
-Reading /srv/eyesofnetwork/notifier/etc/notifier.rules data_type: 
+Reading /srv/rgm/notifier/etc/notifier.rules data_type: 
     *:*:*:*:*:*:*:email
 
 #### matching rule ` *:*:*:*:*:*:*:email '....

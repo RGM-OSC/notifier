@@ -25,7 +25,7 @@ fi
 
 if [ ! ${1} ]
 then
-	ConfigFile="/srv/eyesofnetwork/notifier/etc/notifier.rules"
+	ConfigFile="/srv/rgm/notifier/etc/notifier.rules"
 else
 	ConfigFile="${1}"
 fi

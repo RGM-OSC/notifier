@@ -17,4 +17,4 @@ CREATE TABLE `sents_logs` (
   `cmd_duration` int(255) unsigned DEFAULT NULL,
   `notifier_duration` int(255) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;

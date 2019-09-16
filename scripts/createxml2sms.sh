@@ -23,9 +23,7 @@ for i in $ARGS; do
         if [ -n "`echo ${i} | grep "^\-S"`" ]; then PLATFORMURL="`echo ${i} | sed -e 's:;::g' | cut -c 3-`"; if [ ! -n ${PLATFORMURL} ]; then usage;fi;fi
 done
 
-
-if [ ! -d /tmp/tmp-sendsms/ ]; then mkdir -p /tmp/tmp-sendsms/ && chown -R nagios.eyesofnetwork /tmp/tmp-sendsms ; fi
-
+if [ ! -d /tmp/tmp-sendsms/ ]; then mkdir -p /tmp/tmp-sendsms/ && chown -R nagios.rgm /tmp/tmp-sendsms ; fi
 
 TMPFILE="/tmp/tmp-sendsms/${DESTINATION}"
 DAY="`echo ${LONGDATETIME} | cut -d';' -f1`"
@@ -33,7 +31,6 @@ DAYNB="`echo ${LONGDATETIME} | cut -d';' -f3`"
 MONTH="`echo ${LONGDATETIME} | cut -d';' -f 2,6 | sed 's/;/ /g'`"
 TIME="`echo ${LONGDATETIME} | cut -d';' -f4`"
 DATETIME="$DAY $DAYNB $MONTH $TIME"
-
 
 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
 <MESSAGE_GROUP xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:noNamespaceSchemaLocation=\"${PLATFORURL}\">
@@ -51,8 +48,7 @@ echo " <DEST_GROUP>
     </MESSAGE>
 </MESSAGE_GROUP>" >> /tmp/tmp-sendsms/${DESTINATION}.xml
 
-cp -af /tmp/tmp-sendsms/${DESTINATION}.xml /srv/eyesofnetwork/notifier/var/www/
+cp -af /tmp/tmp-sendsms/${DESTINATION}.xml /srv/rgm/notifier/var/www/
 wget -o /tmp/tmp-sendsms/${DESTINATION}-wget.xml -O /tmp/tmp-sendsms/${DESTINATION}-out.xml -F http://extranet.nimes.fr/extranet/test/sms/index.php?protocol=http\&serverid=2\&path=sms/${DESTINATION}.xml
 
-rm -f /srv/eyesofnetwork/notifier/var/www/${DESTINATION}.xml
-
+/srv/rgm/notifier/var/www/${DESTINATION}.xml
