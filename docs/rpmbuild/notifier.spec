@@ -1,13 +1,18 @@
 Summary:   RGM Advanced Notifier
 Name:      notifier
-Version:   2.1.2
-Release:   0.rgm
+Version:   2.1.3
+Release:   1.rgm
 BuildRoot: /tmp/%{name}-%{version}
 Group:     Applications/Base
 BuildArch: noarch
 License:   GPLv2
-URL:       http://www.rgm-cloud.io
+URL:       https://gitlab.nf.svk.gs/vfricou/notifier
 Packager:  Vincent FRICOU <vincent@fricouv.eu>
+
+# git rev. to checkout for Version
+%define notifier_git_commit 495708a3f1a81d759d9e49f0b031d1cf4836e83e
+Source:    %{name}-%{version}.tar.gz
+Patch0:    %{name}_%{version}.patch
 
 Requires: perl
 Requires: perl-XML-Simple
@@ -61,10 +66,10 @@ RGM advanced notifier can provide a fine configuration for nagios notifications.
 	# install -m 664  docs/db/create_user.txt ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/docs/db/
 
 %post
-	cp -pr /srv/eyesofnetwork/%{name}/etc/* /srv/eyesofnetwork/%{name}-%{version}/etc
-	cp -pr /srv/eyesofnetwork/%{name}/log/* /srv/eyesofnetwork/%{name}-%{version}/log
-	cp -pr /srv/eyesofnetwork/%{name}/scripts/* /srv/eyesofnetwork/%{name}-%{version}/scripts
-	/usr/share/rgm/manage_sql.sh -d %{rgm_db_notifier} -s %{rgm_path}/%{name}-%{version}/docs/db/notifier.sql -u %{rgm_sql_internal_user} -p "%{rgm_sql_internal_pwd}"
+	cp -pr %{rgm_path}/%{name}/etc/* %{rgm_path}/%{name}-%{version}/etc
+	cp -pr %{rgm_path}/%{name}/log/* %{rgm_path}/%{name}-%{version}/log
+	cp -pr %{rgm_path}/%{name}/scripts/* %{rgm_path}/%{name}-%{version}/scripts
+	# /usr/share/rgm/manage_sql.sh -d %{rgm_db_notifier} -s %{rgm_path}/%{name}-%{version}/docs/db/notifier.sql -u %{rgm_sql_internal_user} -p "%{rgm_sql_internal_pwd}"
 
 %postun
 	rm -rf %{rgm_path}/%{name}
@@ -74,16 +79,20 @@ RGM advanced notifier can provide a fine configuration for nagios notifications.
 
 %files
 %defattr(-,root,root,-)
-/srv/eyesofnetwork/%{name}-%{version}/bin/
-/srv/eyesofnetwork/%{name}-%{version}/etc/
-/srv/eyesofnetwork/%{name}-%{version}/docs/
-/srv/eyesofnetwork/%{name}-%{version}/scripts/
-/srv/eyesofnetwork/%{name}-%{version}/var/
-%attr (664,nagios,eyesofnetwork) /srv/eyesofnetwork/%{name}-%{version}/etc/notifier.rules
-%attr (775,nagios,eyesofnetwork) /srv/eyesofnetwork/%{name}-%{version}/log/
-%attr (775,nagios,eyesofnetwork) /srv/eyesofnetwork/%{name}-%{version}/var/www/
+%{rgm_path}/%{name}-%{version}/bin/
+%{rgm_path}/%{name}-%{version}/etc/
+%{rgm_path}/%{name}-%{version}/docs/
+%{rgm_path}/%{name}-%{version}/scripts/
+%{rgm_path}/%{name}-%{version}/var/
+%attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}-%{version}/etc/notifier.rules
+%attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}-%{version}/log/
+%attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}-%{version}/var/www/
 
 %changelog
+* Tue Sep 17 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-1.rgm
+- merged SCC repo on vfricou repo. vfricou now the upstrem repo for notifier
+- adapt SCC CI/CD for building rpm package with upstream SPEC file
+
 * Wed May 08 2019 Vincent Fricou <vincent@fricouv.eu> - 2.1.3-0.rgm
 - fix all content of notifier to directly adapt to RGM
 
