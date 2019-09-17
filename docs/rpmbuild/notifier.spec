@@ -12,7 +12,6 @@ Packager:  Vincent FRICOU <vincent@fricouv.eu>
 # git rev. to checkout for Version
 %define notifier_git_commit 495708a3f1a81d759d9e49f0b031d1cf4836e83e
 Source:    %{name}-%{version}.tar.gz
-Patch0:    %{name}_%{version}.patch
 
 Requires: perl
 Requires: perl-XML-Simple
@@ -57,8 +56,7 @@ RGM advanced notifier can provide a fine configuration for nagios notifications.
 	install -m 664  docs/updates_scripts.md ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/docs/
 	install -m 664  docs/db/notifier.sql ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/docs/db/
 	install -m 775  scripts/createxml2sms.sh ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/scripts/createxml2sms.sh
-	install -m 775  scripts/updates/check_config_file.sh ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/scripts/updates/check_config_file.sh
-	install -m 775  scripts/updates/v2.1_to_v2.1-1.sh ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/scripts/updates/v2.1_to_v2.1.1.sh
+	install -m 775 -D scripts/updates/*.sh ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/scripts/updates/
 	install -m 664  var/www/index.html ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}/var/www/index.html
 
 	# retired from upstream
@@ -96,7 +94,7 @@ RGM advanced notifier can provide a fine configuration for nagios notifications.
 * Wed May 08 2019 Vincent Fricou <vincent@fricouv.eu> - 2.1.3-0.rgm
 - fix all content of notifier to directly adapt to RGM
 
-* Thu Mar 19 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.2-1.rgm
+* Tue Mar 19 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.2-1.rgm
 - fix mariadb dependency to mariadb-libs
 
 * Sun Mar 17 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.2-0.rgm
