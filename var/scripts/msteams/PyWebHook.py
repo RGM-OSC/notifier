@@ -1,173 +1,145 @@
-# Import
-import getopt
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# vim: expandtab ts=4 sw=4:
+
+__author__ = 'Vincent Fricou'
+__copyright__ = '2019, VincentFricou, SCC'
+__credits__ = ['Vincent Fricou', 'Eric Belhomme']
+__license__ = "GPL"
+__version__ = "0.0.2"
+__maintainer__ = ['Vincent Fricou', 'Eric Belhomme']
+
 import sys
 import pymsteams
-
-# Load variables from config file
-sys.path.append('/srv/rgm/notifier/var/scripts/msteams')
-from define import *
+import argparse
+import configparser
 
 
-# Class
+def build_message(priority, ntype, host, host_addr, service, date, state, output, message):
+    teamscnx = None
+    try:
+        teamscnx = pymsteams.connectorcard(message['webhook'])
+    except Exception as e:
+        error_and_die(e)
 
-# Functions
-def usage():
-    print("""
-Script to send monitoring notifications to Microsoft Teams.
-Opts:
-    -h, --help : Display script help
-    -p, --priority : Set priority message
-    -t, --type= : Define nagios type (host, service, application)
-    -H, --host= : Define nagios host
-    -d, --nagios-date= : Define nagios date
-    -s, --service= : Define nagios service
-    -o, --output= : Define nagios output
-    -S, --state= : Define nagios state
-    -a, --host-address= : Define nagios host address
-    -u, --webhook-url : Define custom Teams webhook URL
-""")
-    sys.exit(3)
-
-
-def check_vars(*argv):
-    if argv[0] is None:
-        print("Missing type value !\n")
-        usage()
-    elif argv[0] == 'host':
-        if argv[1] is None or argv[1] == '':
-            print("Missing host value !\n")
-            usage()
-    elif argv[0] == 'service' or argv[0] == 'application':
-        if argv[3] is None or argv[3] == '':
-            print("Missing service value !\n")
-            usage()
+    teamscnx.title(message['title'])
+    if priority == 'high':
+        teamscnx.text("Alerte prioritaire {}".format(message['msg_body']))
     else:
-        assert False, "[ERROR] unhandled type"
+        teamscnx.text(message['msg_body'])
 
-    if argv[2] is None or argv[2] == '':
-        print("Missing date value !\n")
-        usage()
-    if argv[4] is None or argv[4] == '':
-        print("Missing output value !\n")
-        usage()
-    if argv[5] is None or argv[5] == '':
-        print("Missing state value !\n")
-        usage()
-    if argv[6] is None or argv[6] == '':
-        print("Missing hostaddress value !\n")
-        usage()
-
-
-def build_message(*argv):
-    myTeamsMessage = pymsteams.connectorcard(argv[0])
-    myTeamsMessage.title(argv[2])
-    if o_priority == 'high':
-        # myTeamsMessage.text("@DN - Cellule de crise"+argv[3])
-        myTeamsMessage.text("Priorito alert " + argv[3])
-    else:
-        myTeamsMessage.text(argv[3])
-    myTeamsMessage.color(argv[4])
-
-    if argv[1] == 'application':
-        myMessageSection1 = pymsteams.cardsection()
-        if argv[9] == 'OK':
-            myMessageSection1.activityTitle("L'application " + argv[11].replace('_', '\_') + " est revenu a la normale")
-        elif argv[9] == 'WARNING':
-            myMessageSection1.activityTitle("L'application " + argv[11].replace('_', '\_') + " est en alerte")
-        elif argv[9] == 'CRITICAL':
-            myMessageSection1.activityTitle("L'application " + argv[11].replace('_', '\_') + " est indisponible")
+    msgSection = pymsteams.cardsection()
+    if ntype == 'application':
+        if state == 'OK':
+            msgSection.activityTitle("L'application {} est revenu a la normale".format(service.replace('_', '\_')))
+        elif state == 'WARNING':
+            msgSection.activityTitle("L'application {} est en alerte".format(service.replace('_', '\_')))
+        elif state == 'CRITICAL':
+            msgSection.activityTitle("L'application {} est indisponible".format(service.replace('_', '\_')))
         else:
-            myMessageSection1.activityTitle("L'application " + argv[11].replace('_', '\_') + " est " + argv[9])
-        myMessageSection1.addFact("Cause :", argv[6].replace('_', '\_'))
-        myMessageSection1.addFact("Date :", argv[7].replace('_', '\_'))
+            msgSection.activityTitle("L'application {} est à l'état {}".format(service.replace('_', '\_'), state))
+        msgSection.addFact("Cause :", output.replace('_', '\_'))
+        msgSection.addFact("Date :", date.replace('_', '\_'))
     else:
-        myMessageSection1 = pymsteams.cardsection()
-        myMessageSection1.activityTitle(argv[5])
-        myMessageSection1.addFact("Host :", argv[8].replace('_', '\_'))
-        myMessageSection1.addFact("Address :", argv[10].replace('_', '\_'))
-        if argv[1] == 'service':
-            myMessageSection1.addFact("Service :", argv[11].replace('_', '\_'))
-        myMessageSection1.addFact("State :", argv[9].replace('_', '\_'))
-        myMessageSection1.addFact("Info : ", argv[6].replace('_', '\_'))
-        myMessageSection1.addFact("Date :", argv[7])
+        msgSection.activityTitle(message['service_title'])
+        msgSection.addFact("Host :", host.replace('_', '\_'))
+        msgSection.addFact("Address :", host_addr.replace('_', '\_'))
+        if ntype == 'service':
+            msgSection.addFact("Service :", service.replace('_', '\_'))
+        msgSection.addFact("State :", state.replace('_', '\_'))
+        msgSection.addFact("Info : ", output.replace('_', '\_'))
+        msgSection.addFact("Date :", date)
 
-    myTeamsMessage.addSection(myMessageSection1)
-
-    return myTeamsMessage
+    teamscnx.addSection(msgSection)
+    teamscnx.send()
 
 
-# Variables
-opts = None
-o_priority = None
-o_type = None
-o_host = None
-o_hostaddress = None
-o_datetime = None
-o_service = None
-o_output = None
-o_state = None
-o_url = None
-url = None
-
-# Main
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "t:H:d:s:o:S:a:u:hp",
-                               ["type=", "host=", "nagios-date=", "service=", "output=", "state=", "help", "priority", "host-address", "webhook-url"])
-except getopt.GetoptError as err:
-    print("[ERROR]", err)
-    usage()
-
-for o, a in opts:
-    if o in ("-h", "--help"):
-        usage()
-        sys.exit()
-    elif o in ("-p", "--priority"):
-        o_priority = 'high'
-    elif o in ("-t", "--type="):
-        o_type = a
-    elif o in ("-H", "--host="):
-        o_host = a
-    elif o in ("-d", "--nagios-date="):
-        o_datetime = a
-    elif o in ("-s", "--service"):
-        o_service = a
-    elif o in ("-o", "--output"):
-        o_output = a
-    elif o in ("-S", "--state"):
-        o_state = a
-    elif o in ("-a", "--host-address"):
-        o_hostaddress = a
-    elif o in ("-u", "--webhook-url"):
-        o_url = a
-    else:
-        assert False, "[ERROR] unhandled option"
-
-if o_priority == 'high':
-    url = urlCelCrise
-else:
-    if o_url is None:
-        if o_type == 'host' or o_type == 'service':
-            url = urlStandard
-        if o_type == 'application':
-            url = urlApp
-    else:
-        url = o_url
+def error_and_die(message):
+    print("Fatal error: {}".format(message))
+    sys.exit(1)
 
 
-check_vars(o_type, o_host, o_datetime, o_service, o_output, o_state, o_hostaddress)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description="""
+            Script to send RGM notifications to Microsoft Teams messenger
+        """,
+        usage="""
+        """,
+        epilog="version {}, copyright {}".format(__version__, __copyright__))
 
-if o_state == 'CRITICAL' or o_state == 'DOWN':
-    color = colorCrit
-elif o_state == 'WARNING':
-    color = colorWarn
-elif o_state == 'OK' or o_state == 'UP':
-    color = colorOk
-else:
-    color = "000000"
+    parser.add_argument('-c', '--config', type=str, help='set config file', default='/srv/rgm/notifier/etc/msteams.ini')
+    parser.add_argument(
+        '-p', '--priority', type=str,help='set message priority', default='default',
+        choices=['low', 'default', 'high']
+    )
+    parser.add_argument(
+        '-t', '--type', type=str, help='define nagios type (host, service, application)', required=True,
+        choices=['host', 'service', 'application']
+        )
+    parser.add_argument('-H', '--host', type=str, help='define nagios host')
+    parser.add_argument('-d', '--nagios-date', type=str, help='define nagios date', required=True)
+    parser.add_argument('-s', '--service', type=str, help='define nagios service')
+    parser.add_argument('-o', '--output', type=str, help='define nagios output', required=True)
+    parser.add_argument('-S', '--state', type=str, help='define nagios state', required=True)
+    parser.add_argument('-a', '--host-address', type=str, help='define nagios host address', required=True)
+    parser.add_argument('-u', '--webhook-url', type=str, help='define custom Teams webhook URL', default=None)
+    args = parser.parse_args()
 
-# def build_message(url, type, title, text, color, actitle, info, date, host, state, service, o_priority ):
-tMessage = build_message(url, o_type, cardTitle, cardText, color, activityTitleSvc, o_output, o_datetime, o_host,
-                         o_state, o_hostaddress, o_service, o_priority)
+    cfgfile = configparser.ConfigParser()
+    try:
+        cfgfile.read(args.config)
+    except Exception as e:
+        error_and_die("Error while loading config file {}. Error was: {}".format(args.config, e))
 
-# Send message to webhook
-tMessage.send()
+    if 'webhooks' not in cfgfile:
+        error_and_die('no [webhooks] section in config file')
+    if 'default' not in cfgfile['webhooks']:
+        error_and_die('no default webhook specified')
+
+    message_params = {
+        'webhook': cfgfile['webhooks']['default'],
+        'title': 'RGM monitoring',
+        'service_title': '---',
+        'msg_body': 'A new RGM notification occured',
+        'color': '000000'
+    }
+    colors = [
+        '00ff00',  # 0 -> ok/up
+        'fbfb00',  # 1 -> warning
+        'ff0000',  # 2 -> critical/down
+    ]
+
+    if args.priority in cfgfile['webhooks']:
+        message_params['webhook'] = cfgfile['webhooks'][args.priority]
+    if args.webhook_url is not None:
+        message_params['webhook'] = args.webhook_url
+
+    if 'message' in cfgfile:
+        for item in ('title', 'body', 'service_title'):
+            if item in cfgfile['message']:
+                message_params['item'] = cfgfile['message'][item]
+
+    if 'color' in cfgfile:
+        for idx, item in [(0, 'ok'), (1, 'warning'), (2, 'critical')]:
+            if item in cfgfile['color']:
+                colors[idx] = cfgfile['color'][item]
+    
+    if args.state.upper() in ('CRITICAL', 'DOWN'):
+        message_params['color'] = colors[2]
+    elif args.state.upper() in ('OK', 'UP'):
+        message_params['color'] = colors[0]
+    elif args.state.upper() == 'WARNING':
+        message_params['color'] = colors[1]
+
+    build_message(
+        priority=args.priority,
+        ntype=args.type.lower(),
+        host=args.host,
+        host_addr=args.host_address,
+        service=args.service,
+        date=args.nagios_date,
+        state=args.state.upper(),
+        output=args.output,
+        message=message_params
+    )
