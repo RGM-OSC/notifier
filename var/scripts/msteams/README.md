@@ -33,7 +33,7 @@ urlCelCrise = "<Microsoft_Teams_Incoming_Webhook_for_prioritary_notifications>"
 ### CLI Usage
 
 ```bash
-./venv/bin/python PyWebHook.py -h
+./venv/bin/python3 PyWebHook.py -h
 
 Script to send monitoring notifications to Microsoft Teams.
 Opts:
@@ -56,24 +56,24 @@ The switch **-p** is specialy designed to could send notification in specific ch
 To send a basic host notification :
 
 ```bash
-./venv/bin/python PyWebHook.py -t host -H localhost -a '10.1.0.41' -d 'Thu Nov 22 17:04:52 CET 2018' -o 'Test' -S 'OK'
+./venv/bin/python3 PyWebHook.py -t host -H localhost -a '10.1.0.41' -d 'Thu Nov 22 17:04:52 CET 2018' -o 'Test' -S 'OK'
 ```
 
 To send a priority application notification :
 
 ```bash
-./venv/bin/python PyWebHook.py -t application -H localhost -a '10.1.0.41' -d 'Thu Nov 22 17:04:52 CET 2018' -s 'Application Test' -o 'Test' -S 'CRITICAL' -p
+./venv/bin/python3 PyWebHook.py -t application -H localhost -a '10.1.0.41' -d 'Thu Nov 22 17:04:52 CET 2018' -s 'Application Test' -o 'Test' -S 'CRITICAL' -p
 ```
 
 ## Screenshot
 
 ### Application card
-![application_notif_up](./screenshot/application_notif_up.png)
+![application_notif_up](./screenshots/application_notif_up.png)
 
 ### Service card
-![standard_notif_critical_service](./screenshot/standard_notif_critical_service.png)
-![standard_notif_warning_service](./screenshot/standard_notif_warning_service.png)
-![standard_notif_up_service](./screenshot/standard_notif_up_service.png)
+![standard_notif_critical_service](./screenshots/standard_notif_critical_service.png)
+![standard_notif_warning_service](./screenshots/standard_notif_warning_service.png)
+![standard_notif_up_service](./screenshots/standard_notif_up_service.png)
 
 ### Host card
-![standard_notif_up_host](./screenshot/standard_notif_up_host.png)
+![standard_notif_up_host](./screenshots/standard_notif_up_host.png)
