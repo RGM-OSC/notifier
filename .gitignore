@@ -61,3 +61,5 @@ Temporary Items
 .*\~
 .idea
 .project
+
+var/scripts/msteams/venv
