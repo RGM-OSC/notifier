@@ -4,7 +4,7 @@ Version:   2.1.3
 Release:   2.rgm
 BuildRoot: /tmp/%{name}-%{version}
 Group:     Applications/Base
-BuildArch: noarch
+#BuildArch: noarch
 License:   GPLv2
 URL:       https://gitlab.nf.svk.gs/vfricou/notifier
 Packager:  Vincent FRICOU <vincent@fricouv.eu>
@@ -21,9 +21,10 @@ Requires: perl-DBI
 Requires: perl-DBD-MySQL
 Requires: git
 Requires: rgm-base
-Requires: python36-virtualenv python36-pip python3-wheel python36-setuptools
+Requires: python36
 
 BuildRequires: rpm-macros-rgm
+BuildRequires: python36-virtualenv python36-pip python3-wheel python36-setuptools
 
 
 %description
@@ -34,16 +35,17 @@ RGM advanced notifier can provide a fine configuration for nagios notifications.
 %setup -q -n %{name}-%{version}
 
 %build
-python3 -m venv ${RPM_BUILD_ROOT}%/venv
-$(. ${RPM_BUILD_ROOT}%/venv/bin/activate && pip3 install pymsteams)
+python3 -m venv --copies venv
+./venv/bin/pip3 install pymsteams
 
 %install
-	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/{etc,bin,log,var}
-	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/var/scripts/www
-	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/var/scripts/updates
-	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/var/scripts/msteams/screenshots
+	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/{etc,bin,log,var}
+	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/{venv,www}
+	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/updates
+	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/msteams/screenshots
+	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/messages
+	mkdir -p ${RPM_BUILD_ROOT}/etc/logrotate.d
 	mkdir -p ${RPM_BUILD_ROOT}/usr/share/doc/%{name}/{etc,sql,messages,doc,templates}
-	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/etc/messages
 
 	#binary
 	install -m 775 bin/notifier.pl ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/bin/
@@ -63,26 +65,19 @@ $(. ${RPM_BUILD_ROOT}%/venv/bin/activate && pip3 install pymsteams)
 
 	# scripts
 	install -m 775 var/scripts/createxml2sms.sh ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/
-	install -m 775 -D scripts/updates/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/updates/
+	install -m 775 -D var/scripts/updates/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/updates/
 	
 	# msteams and it python3 env
-	cp -a ${RPM_BUILD_ROOT}%/venv ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/
-	install -m 664 -D scripts/msteams/screenshots/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/msteams/screenshots/
-	install -m 775 -D scripts/msteams/*.py ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/msteams/
+	cp -a venv/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/venv/
+	install -m 664 -D var/scripts/msteams/screenshots/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/msteams/screenshots/
+	install -m 775 -D var/scripts/msteams/*.py ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/msteams/
 
 	# web
 	install -m 664  var/www/index.html ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/www/index.html
 
-	
-#%post
-#	cp -pr %{rgm_path}/%{name}/etc/* %{rgm_path}/%{name}-%{version}/etc
-#	cp -pr %{rgm_path}/%{name}/log/* %{rgm_path}/%{name}-%{version}/log
-#	cp -pr %{rgm_path}/%{name}/scripts/* %{rgm_path}/%{name}-%{version}/scripts
-#	# /usr/share/rgm/manage_sql.sh -d %{rgm_db_notifier} -s %{rgm_path}/%{name}-%{version}/docs/db/notifier.sql -u %{rgm_sql_internal_user} -p "%{rgm_sql_internal_pwd}"
 
 %postun
-	rm -f %{rgm_path}/%{name}
-	rm -rf %{rgm_path}/%{name}-%{version}
+	rm -rf %{rgm_path}/%{name}
 	
 %clean
 	rm -rf ${RPM_BUILD_ROOT}%{rgm_path}/%{name}-%{version}
@@ -90,14 +85,13 @@ $(. ${RPM_BUILD_ROOT}%/venv/bin/activate && pip3 install pymsteams)
 %files
 %defattr(-,root,root,-)
 %{rgm_path}/%{name}/bin/
-%config %{rgm_path}/%{name}/etc/
+#%config %{rgm_path}/%{name}/etc/
 %config /etc/logrotate.d/notifier
 %doc /usr/share/doc/notifier
 %{rgm_path}/%{name}/var/
-%attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.cfg
-%attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.rules
+%config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.cfg
+%config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.rules
 %attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/log/
-%attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/var/www/
 
 %changelog
 * Thu Sep 19 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-2.rgm
