@@ -116,7 +116,7 @@ if __name__ == '__main__':
         message_params['webhook'] = args.webhook_url
 
     if 'message' in cfgfile:
-        for item in ('title', 'body', 'service_title'):
+        for item in ['title', 'body', 'service_title']:
             if item in cfgfile['message']:
                 message_params['item'] = cfgfile['message'][item]
 
