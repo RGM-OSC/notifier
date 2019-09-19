@@ -58,3 +58,8 @@ Temporary Items
 # Vim backup files
 # ========================
 *\~
+.*\~
+.idea
+.project
+
+var/scripts/msteams/venv
