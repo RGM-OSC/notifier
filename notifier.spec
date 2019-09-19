@@ -35,8 +35,17 @@ RGM advanced notifier can provide a fine configuration for nagios notifications.
 %setup -q -n %{name}-%{version}
 
 %build
+# create on the fly python3 venv for msteams script
 python3 -m venv --copies venv
 ./venv/bin/pip3 install pymsteams
+# clean and patch python3 venv root path
+find ./venv -name *.pyc -exec rm -f {} \;
+find ./venv -name *.pyo -exec rm -f {} \;
+BUILD_ENV=$(dirname $(grep ^VIRTUAL_ENV= ./venv/bin/activate | cut -d '"' -f 2 ))
+for FILE in $(grep -FlR "$BUILD_ENV" $BUILD_ENV); do
+	sed -i "s|${BUILD_ENV}|%{rgm_path}/%{name}/var|g" $FILE
+done
+
 
 %install
 	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/{etc,bin,log,var}
