@@ -17,14 +17,14 @@ Is necessary to create notifier database before start using RGM advanced notific
 ### Create database
 
 A script exist to automaticaly create database on running system if default mysql root password as not changed :
-> docs/db/create_database.sh
+> usr/share/doc/notifier/sql/create_database.sh
 
 Just launch this script to create database.
 
 ## Tools
 
 A script has be writted to migrate one version to other more easier.  
-You'll find it in notifier/scripts/updates/v2.1.2_to_v2.1.3.sh
+You'll find it in var/scripts/updates/v2.1.2_to_v2.1.3.sh
 
 ## Nagios commands
 

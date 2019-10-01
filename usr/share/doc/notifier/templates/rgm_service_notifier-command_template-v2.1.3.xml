@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EoN_Export type="Command">
+  <Command id="2" object="true">
+    <Name>rgm_service_notifier</Name>
+    <Line>$USER17$/notifier/bin/notifier.pl -t host -c $USER17$/notifier/etc/notifier.cfg -r $USER17$/notifier/etc/notifier.rules -T "$LONGDATETIME$" -h "$HOSTNAME$" -s "$SERVICEDESC$" -e "$SERVICESTATE$" -i "$HOSTADDRESS$" -n "$NOTIFICATIONTYPE$" -C "$CONTACTNAME$" -M "$CONTACTEMAIL$" -O "$SERVICEOUTPUT$" -A "$HOSTGROUPNAMES$" -B "$SERVICEGROUPNAMES$" -G "$CONTACTGROUPNAMES$" -X "$TIME$" -Y "$SERVICENOTIFICATIONNUMBER$" -N "$CONTACTPAGER$"</Line>
+    <Description>RGM notification broker for service</Description>
+  </Command>
+</EoN_Export>
