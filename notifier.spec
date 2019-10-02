@@ -1,7 +1,7 @@
 Summary:   RGM Advanced Notifier
 Name:      notifier
 Version:   2.1.3
-Release:   2.rgm
+Release:   3.rgm
 BuildRoot: /tmp/%{name}-%{version}
 Group:     Applications/Base
 #BuildArch: noarch
@@ -69,6 +69,8 @@ done
 	# etc tree
 	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/notifier.cfg ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
 	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/notifier.rules ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
+	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/dbi.ini ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
+	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/msteams.ini ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
 	install -m 664 usr/share/doc/notifier/messages/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/messages/
 	install -m 664 usr/share/doc/notifier/etc/notifier.logrotate ${RPM_BUILD_ROOT}/etc/logrotate.d/notifier
 
@@ -103,6 +105,10 @@ done
 %attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/log/
 
 %changelog
+* Thu Sep 19 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-3.rgm
+- DBI now have its dedicated config file dbi.ini
+- fix missing msteams.ini config file
+
 * Thu Sep 19 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-2.rgm
 - directory tree refactoring
 - MS teams notifier integration

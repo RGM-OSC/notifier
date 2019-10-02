@@ -25,6 +25,7 @@ use Getopt::Std;
 use File::Basename;
 use XML::Simple;
 use DBI;
+use Config::Tiny;
 use Data::Dumper;
 setlocale(LC_CTYPE, "en_US");
 $XML::Simple::PREFERRED_PARSER = XML::Parser;
@@ -49,10 +50,13 @@ my %methods_hash;
 my $priority = 100;
 
 ## SQL part
+my $dbicfg = Config::Tiny->read( '/srv/rgm/notifier/etc/dbi.ini', 'utf8' );
 my $dbh;
 my $query;
-my $sqluser = "notifierSQL";
-my $sqlpassword = "Notifier66";
+my $sqlserver = $dbicfg->{dbi}{server};
+my $sqldb = $dbicfg->{dbi}{database};
+my $sqluser = $dbicfg->{dbi}{user};
+my $sqlpassword = $dbicfg->{dbi}{password};
 my $epoch = time;
 my $cmd_dur_start;
 my $cmd_duration;
@@ -80,7 +84,7 @@ my $service_state;
 my $service_output;
 
 # database connection
-$dbh = DBI->connect("DBI:mysql:notifier:127.0.0.1", $sqluser, $sqlpassword);
+$dbh = DBI->connect("DBI:mysql:$sqldb:$sqlserver", $sqluser, $sqlpassword);
 
 %options=();
 getopts( "t:c:r:h:s:e:T:i:n:C:O:G:N:A:B:X:Y:M:", \%options);
