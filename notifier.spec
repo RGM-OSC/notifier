@@ -102,6 +102,8 @@ done
 %{rgm_path}/%{name}/var/
 %config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.cfg
 %config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.rules
+%config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/dbi.ini
+%config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/msteams.ini
 %attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/log/
 
 %changelog
