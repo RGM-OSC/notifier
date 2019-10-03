@@ -132,6 +132,7 @@ CREATE TABLE `rules` (
   `state` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
   `notificationnumber` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
   `timeperiod_id` bigint(20) unsigned NOT NULL,
+  `tracking` tinyint(1) COLLATE utf8_bin NOT NULL DEFAULT '0',
   `sort_key` int(32) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `timeperiod_id` (`timeperiod_id`),
