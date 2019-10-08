@@ -1,7 +1,7 @@
 Summary:   RGM Advanced Notifier
 Name:      notifier
 Version:   2.1.3
-Release:   3.rgm
+Release:   4.rgm
 BuildRoot: /tmp/%{name}-%{version}
 Group:     Applications/Base
 #BuildArch: noarch
