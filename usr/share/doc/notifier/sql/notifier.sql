@@ -142,10 +142,10 @@ CREATE TABLE `rules` (
 LOCK TABLES `rules` WRITE;
 /*!40000 ALTER TABLE `rules` DISABLE KEYS */;
 INSERT INTO `rules` VALUES 
-  (1,'HOSTS UP (24x7)','host',0,'*','*','-','UP','*',1,0,0),
-  (2,'HOSTS ALERTS (24x7)','host',0,'*','*','-','*','1',1,1,0),
-  (3,'SERVICES OK (24x7)','service',0,'*','*','*','OK','*',1,0,0),
-  (4,'SERVICES ALERTS (24x7)','service',0,'*','*','*','*','1',1,1,0);
+  (1,'HOSTS UP (24x7)','host',0,'*','*','-','UP','*',1,0,0,0),
+  (2,'HOSTS ALERTS (24x7)','host',0,'*','*','-','*','1',1,1,0,0),
+  (3,'SERVICES OK (24x7)','service',0,'*','*','*','OK','*',1,0,0,0),
+  (4,'SERVICES ALERTS (24x7)','service',0,'*','*','*','*','1',1,1,0,0);
 /*!40000 ALTER TABLE `rules` ENABLE KEYS */;
 UNLOCK TABLES;
 
