@@ -1,7 +1,7 @@
 Summary:   RGM Advanced Notifier
 Name:      notifier
 Version:   2.1.3
-Release:   3.rgm
+Release:   5.rgm
 BuildRoot: /tmp/%{name}-%{version}
 Group:     Applications/Base
 #BuildArch: noarch
@@ -52,6 +52,7 @@ done
 	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/{venv,www}
 	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/updates
 	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/msteams/screenshots
+	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/slack
 	mkdir -p ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/messages
 	mkdir -p ${RPM_BUILD_ROOT}/etc/logrotate.d
 	mkdir -p ${RPM_BUILD_ROOT}/usr/share/doc/%{name}/{etc,sql,messages,doc,templates}
@@ -71,12 +72,14 @@ done
 	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/notifier.rules ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
 	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/dbi.ini ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
 	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/msteams.ini ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
+	install -m 664 -o %{rgm_user_nagios} -g %{rgm_group} usr/share/doc/notifier/etc/slack.ini ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/
 	install -m 664 usr/share/doc/notifier/messages/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/etc/messages/
 	install -m 664 usr/share/doc/notifier/etc/notifier.logrotate ${RPM_BUILD_ROOT}/etc/logrotate.d/notifier
 
 	# scripts
 	install -m 775 var/scripts/createxml2sms.sh ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/
 	install -m 775 -D var/scripts/updates/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/updates/
+	install -m 775 -D var/scripts/slack/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/scripts/slack/
 	
 	# msteams and it python3 env
 	cp -a venv/* ${RPM_BUILD_ROOT}%{rgm_path}/%{name}/var/venv/
@@ -104,9 +107,14 @@ done
 %config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/notifier.rules
 %config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/dbi.ini
 %config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/msteams.ini
+%config %attr (664,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/etc/slack.ini
 %attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/log/
 
 %changelog
+* Wed Nov 20 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-4.rgm
+- fix missing SQL schema (rules tables)
+- add Slack support as notification target
+
 * Thu Sep 19 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-3.rgm
 - DBI now have its dedicated config file dbi.ini
 - fix missing msteams.ini config file

@@ -87,7 +87,10 @@ INSERT INTO `methods` VALUES
   (4,'teams-service','service','/srv/rgm/notifier/var/venv/bin/python3 /srv/rgm/notifier/var/scripts/msteams/PyWebHook.py -t service -H \"$HOSTNAME$\" -a \"$HOSTADDRESS$\" -d \"$LONGDATETIME$\" -o \"$SERVICEOUTPUT$\" -S \"$SERVICESTATE$\" -s \"$SERVICEDESC$\"'),
   (5,'teams-app','service','/srv/rgm/notifier/var/venv/bin/python3 /srv/rgm/notifier/var/scripts/msteams/PyWebHook.py -t application -H \"$HOSTNAME$\" -a \"$HOSTADDRESS$\" -d \"$LONGDATETIME$\" -o \"$SERVICEOUTPUT$\" -S \"$SERVICESTATE$\" -s \"$SERVICEDESC$\"'),
   (6,'teams-prio','service','/srv/rgm/notifier/var/venv/bin/python3 /srv/rgm/notifier/var/scripts/msteams/PyWebHook.py -t application -H \"$HOSTNAME$\" -a \"$HOSTADDRESS$\" -d \"$LONGDATETIME$\" -o \"$SERVICEOUTPUT$\" -S \"$SERVICESTATE$\" -s \"$SERVICEDESC$\" -p'),
-  (7,'email-appCRITICAL','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est actuellement indisponible.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est indisponible\" $CONTACTEMAIL$'),(8,'email-appWARNING','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ rencontre actuellement quelques perturbations.\\\\n\\\\nNos equipes mettent tout en oeuvre pour resoudre au plus vite le probleme.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est en alerte\" $CONTACTEMAIL$'),(9,'email-appOK','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est revenue a un etat de fonctionnement normal.\\\\n\\\\nElle ne rencontre actuellement plus de perturbations.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est revenue a la normale\" $CONTACTEMAIL$');
+  (7,'email-appCRITICAL','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est actuellement indisponible.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est indisponible\" $CONTACTEMAIL$'),(8,'email-appWARNING','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ rencontre actuellement quelques perturbations.\\\\n\\\\nNos equipes mettent tout en oeuvre pour resoudre au plus vite le probleme.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est en alerte\" $CONTACTEMAIL$'),(9,'email-appOK','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est revenue a un etat de fonctionnement normal.\\\\n\\\\nElle ne rencontre actuellement plus de perturbations.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est revenue a la normale\" $CONTACTEMAIL$'),
+  (8, 'slack_notify_host', 'host', '/srv/rgm/notifier/var/scripts/slack/slack_notify_host.sh "$HOSTSTATE$" "$HOSTALIAS$" "$HOSTADDRESS$" "$LONGDATETIME$" "$SERVICEOUTPUT$"'),
+  (9, 'slack_notify_service', 'service', '/srv/rgm/notifier/var/scripts/slack/slack_notify_service.sh "$HOSTSTATE$" "$HOSTALIAS$" "$HOSTADDRESS$" "$SERVICEDESC$" "$SERVICEOUTPUT$" "$LONGDATETIME$"');
+)
 /*!40000 ALTER TABLE `methods` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -142,10 +145,10 @@ CREATE TABLE `rules` (
 LOCK TABLES `rules` WRITE;
 /*!40000 ALTER TABLE `rules` DISABLE KEYS */;
 INSERT INTO `rules` VALUES 
-  (1,'HOSTS UP (24x7)','host',0,'*','*','-','UP','*',1,0),
-  (2,'HOSTS ALERTS (24x7)','host',0,'*','*','-','*','1',1,1),
-  (3,'SERVICES OK (24x7)','service',0,'*','*','*','OK','*',1,0),
-  (4,'SERVICES ALERTS (24x7)','service',0,'*','*','*','*','1',1,1);
+  (1,'HOSTS UP (24x7)','host',0,'*','*','-','UP','*',1,0,0,0),
+  (2,'HOSTS ALERTS (24x7)','host',0,'*','*','-','*','1',1,1,0,0),
+  (3,'SERVICES OK (24x7)','service',0,'*','*','*','OK','*',1,0,0,0),
+  (4,'SERVICES ALERTS (24x7)','service',0,'*','*','*','*','1',1,1,0,0);
 /*!40000 ALTER TABLE `rules` ENABLE KEYS */;
 UNLOCK TABLES;
 
