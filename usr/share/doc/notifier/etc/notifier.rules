@@ -1,7 +1,8 @@
 <rules>
-    <debug_rules> 3 </debug_rules> 
-    <logrules_file> /srv/rgm/notifier/log/notifier_rules.log </logrules_file>
-    <notifsent_file> /srv/rgm/notifier/log/notifier_send.log </notifsent_file>
+    <!-- enable global rules debuging. value is 0 or 1 -->
+    <debug_rules>0</debug_rules> 
+    <logrules_file>/srv/rgm/notifier/log/notifier_rules.log</logrules_file>
+    <notifsent_file>/srv/rgm/notifier/log/notifier_send.log</notifsent_file>
 
     <host>
         0:*:*:-:UP:*:*:*:email,sms:1

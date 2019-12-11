@@ -1,7 +1,10 @@
 /srv/rgm/notifier/log/notifier_send.log /srv/rgm/notifier/log/notifier_rules.log {
+	rotate 8
 	missingok
-	monthly
+	daily
+	dateyesterday
 	notifempty
 	compress
-	create 0664 nagios rgm
+	create 0644 nagios rgm
+	su nagios rgm
 }

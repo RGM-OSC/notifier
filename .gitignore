@@ -63,3 +63,4 @@ Temporary Items
 .project
 
 var/scripts/msteams/venv
+.vstags
