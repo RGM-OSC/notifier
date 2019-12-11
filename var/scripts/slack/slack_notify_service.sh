@@ -14,6 +14,6 @@ LONGDATETIME="$6"
 { \
 	\"channel\": \"${SLACK_CHANNEL}\", \
 	\"username\": \"${SLACK_USER}\", \
-	\"text": \":skull_and_crossbones: *$NOTIFICATIONTYPE$ ($SERVICESTATE) sur $HOSTALIAS ($HOSTADDRESS)* \\nService: *$SERVICEDESC* \\nDate: $LONGDATETIME \\nAdditional Info: $SERVICEOUTPUT\",
+	\"text\": \":skull_and_crossbones: *$NOTIFICATIONTYPE$ ($SERVICESTATE) sur $HOSTALIAS ($HOSTADDRESS)* \\nService: *$SERVICEDESC* \\nDate: $LONGDATETIME \\nAdditional Info: $SERVICEOUTPUT\",
 	\"icon_emoji\": \"${SLACK_EMOJI}\" \
 }" ${SLACK_WEBHOOK}
