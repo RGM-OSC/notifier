@@ -9,29 +9,6 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP TABLE IF EXISTS `sents_logs`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `sents_logs` (
-  `id` int(255) unsigned NOT NULL AUTO_INCREMENT,
-  `nagios_date` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `contact` longtext COLLATE utf8_bin,
-  `host` longtext COLLATE utf8_bin,
-  `service` longtext COLLATE utf8_bin,
-  `state` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `notification_number` int(11) DEFAULT NULL,
-  `method` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `priority` tinyint(1) DEFAULT NULL,
-  `matched_rule` longtext COLLATE utf8_bin,
-  `exit_code` tinyint(1) DEFAULT NULL,
-  `exit_command` longtext COLLATE utf8_bin,
-  `epoch` int(255) unsigned DEFAULT NULL,
-  `cmd_duration` int(255) unsigned DEFAULT NULL,
-  `notifier_duration` int(255) unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
 
 DROP TABLE IF EXISTS `configs`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -56,15 +33,22 @@ INSERT INTO `configs` VALUES
 UNLOCK TABLES;
 
 
-DROP TABLE IF EXISTS `contacts`;
+DROP TABLE IF EXISTS `timeperiods`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `contacts` (
+CREATE TABLE `timeperiods` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `debug` tinyint(1) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  `daysofweek` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
+  `timeperiod` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
+LOCK TABLES `timeperiods` WRITE;
+/*!40000 ALTER TABLE `timeperiods` DISABLE KEYS */;
+INSERT INTO `timeperiods` VALUES (1,'24x7','*','*');
+/*!40000 ALTER TABLE `timeperiods` ENABLE KEYS */;
+UNLOCK TABLES;
 
 
 DROP TABLE IF EXISTS `methods`;
@@ -87,38 +71,24 @@ INSERT INTO `methods` VALUES
   (4,'teams-service','service','/srv/rgm/notifier/var/venv/bin/python3 /srv/rgm/notifier/var/scripts/msteams/PyWebHook.py -t service -H \"$HOSTNAME$\" -a \"$HOSTADDRESS$\" -d \"$LONGDATETIME$\" -o \"$SERVICEOUTPUT$\" -S \"$SERVICESTATE$\" -s \"$SERVICEDESC$\"'),
   (5,'teams-app','service','/srv/rgm/notifier/var/venv/bin/python3 /srv/rgm/notifier/var/scripts/msteams/PyWebHook.py -t application -H \"$HOSTNAME$\" -a \"$HOSTADDRESS$\" -d \"$LONGDATETIME$\" -o \"$SERVICEOUTPUT$\" -S \"$SERVICESTATE$\" -s \"$SERVICEDESC$\"'),
   (6,'teams-prio','service','/srv/rgm/notifier/var/venv/bin/python3 /srv/rgm/notifier/var/scripts/msteams/PyWebHook.py -t application -H \"$HOSTNAME$\" -a \"$HOSTADDRESS$\" -d \"$LONGDATETIME$\" -o \"$SERVICEOUTPUT$\" -S \"$SERVICESTATE$\" -s \"$SERVICEDESC$\" -p'),
-  (7,'email-appCRITICAL','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est actuellement indisponible.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est indisponible\" $CONTACTEMAIL$'),(8,'email-appWARNING','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ rencontre actuellement quelques perturbations.\\\\n\\\\nNos equipes mettent tout en oeuvre pour resoudre au plus vite le probleme.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est en alerte\" $CONTACTEMAIL$'),(9,'email-appOK','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est revenue a un etat de fonctionnement normal.\\\\n\\\\nElle ne rencontre actuellement plus de perturbations.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est revenue a la normale\" $CONTACTEMAIL$'),
-  (8, 'slack_notify_host', 'host', '/srv/rgm/notifier/var/scripts/slack/slack_notify_host.sh "$HOSTSTATE$" "$HOSTALIAS$" "$HOSTADDRESS$" "$LONGDATETIME$" "$SERVICEOUTPUT$"'),
-  (9, 'slack_notify_service', 'service', '/srv/rgm/notifier/var/scripts/slack/slack_notify_service.sh "$HOSTSTATE$" "$HOSTALIAS$" "$HOSTADDRESS$" "$SERVICEDESC$" "$SERVICEOUTPUT$" "$LONGDATETIME$"');
-)
+  (7,'email-appCRITICAL','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est actuellement indisponible.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est indisponible\" $CONTACTEMAIL$'),
+  (8,'email-appWARNING','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ rencontre actuellement quelques perturbations.\\\\n\\\\nNos equipes mettent tout en oeuvre pour resoudre au plus vite le probleme.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est en alerte\" $CONTACTEMAIL$'),
+  (9,'email-appOK','service','/usr/bin/printf \"%b\" \"*****  RGM  *****\\\\n\\\\nL Application $SERVICEDESC$ est revenue a un etat de fonctionnement normal.\\\\n\\\\nElle ne rencontre actuellement plus de perturbations.\\\\n\\\\nInfo: $SERVICEOUTPUT$\\\\n\\\\n\\\\n\\\\nDate/Time : $LONGDATETIME$\\\\n\" | /bin/mail -s \"L application $SERVICEDESC$ est revenue a la normale\" $CONTACTEMAIL$'),
+  (10, 'slack_notify_host', 'host', '/srv/rgm/notifier/var/scripts/slack/slack_notify_host.sh "$HOSTSTATE$" "$HOSTALIAS$" "$HOSTADDRESS$" "$LONGDATETIME$" "$SERVICEOUTPUT$"'),
+  (11, 'slack_notify_service', 'service', '/srv/rgm/notifier/var/scripts/slack/slack_notify_service.sh "$HOSTSTATE$" "$HOSTALIAS$" "$HOSTADDRESS$" "$SERVICEDESC$" "$SERVICEOUTPUT$" "$LONGDATETIME$"');
 /*!40000 ALTER TABLE `methods` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
-DROP TABLE IF EXISTS `rule_method`;
+DROP TABLE IF EXISTS `contacts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `rule_method` (
-  `rule_id` bigint unsigned NOT NULL,
-  `method_id` bigint unsigned NOT NULL,
-  PRIMARY KEY (`rule_id`,`method_id`),
-  KEY `rule_id` (`rule_id`),
-  KEY `method_id` (`method_id`),
-  CONSTRAINT `rule_method_ibfk_1` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`),
-  CONSTRAINT `rule_method_ibfk_2` FOREIGN KEY (`method_id`) REFERENCES `methods` (`id`)
+CREATE TABLE `contacts` (
+  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `debug` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
-
-LOCK TABLES `rule_method` WRITE;
-/*!40000 ALTER TABLE `rule_method` DISABLE KEYS */;
-INSERT INTO `rule_method` VALUES 
-  (1,1),
-  (2,1),
-  (3,2),
-  (4,2);
-/*!40000 ALTER TABLE `rule_method` ENABLE KEYS */;
-UNLOCK TABLES;
 
 
 DROP TABLE IF EXISTS `rules`;
@@ -145,30 +115,62 @@ CREATE TABLE `rules` (
 LOCK TABLES `rules` WRITE;
 /*!40000 ALTER TABLE `rules` DISABLE KEYS */;
 INSERT INTO `rules` VALUES 
-  (1,'HOSTS UP (24x7)','host',0,'*','*','-','UP','*',1,0,0,0),
-  (2,'HOSTS ALERTS (24x7)','host',0,'*','*','-','*','1',1,1,0,0),
-  (3,'SERVICES OK (24x7)','service',0,'*','*','*','OK','*',1,0,0,0),
-  (4,'SERVICES ALERTS (24x7)','service',0,'*','*','*','*','1',1,1,0,0);
+  (1,'HOSTS UP (24x7)','host',0,'*','*','-','UP','*',1,0,0),
+  (2,'HOSTS ALERTS (24x7)','host',0,'*','*','-','*','1',1,1,0),
+  (3,'SERVICES OK (24x7)','service',0,'*','*','*','OK','*',1,0,0),
+  (4,'SERVICES ALERTS (24x7)','service',0,'*','*','*','*','1',1,1,0);
 /*!40000 ALTER TABLE `rules` ENABLE KEYS */;
 UNLOCK TABLES;
 
 
-DROP TABLE IF EXISTS `timeperiods`;
+DROP TABLE IF EXISTS `rule_method`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `timeperiods` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_bin NOT NULL,
-  `daysofweek` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
-  `timeperiod` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+CREATE TABLE `rule_method` (
+  `rule_id` bigint unsigned NOT NULL,
+  `method_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`rule_id`,`method_id`),
+  KEY `rule_id` (`rule_id`),
+  KEY `method_id` (`method_id`),
+  CONSTRAINT `rule_method_ibfk_1` FOREIGN KEY (`rule_id`) REFERENCES `rules` (`id`),
+  CONSTRAINT `rule_method_ibfk_2` FOREIGN KEY (`method_id`) REFERENCES `methods` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
-LOCK TABLES `timeperiods` WRITE;
-/*!40000 ALTER TABLE `timeperiods` DISABLE KEYS */;
-INSERT INTO `timeperiods` VALUES (1,'24x7','*','*');
-/*!40000 ALTER TABLE `timeperiods` ENABLE KEYS */;
+LOCK TABLES `rule_method` WRITE;
+/*!40000 ALTER TABLE `rule_method` DISABLE KEYS */;
+INSERT INTO `rule_method` VALUES 
+  (1,1),
+  (2,1),
+  (3,2),
+  (4,2);
+/*!40000 ALTER TABLE `rule_method` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+DROP TABLE IF EXISTS `sents_logs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sents_logs` (
+  `id` int(255) unsigned NOT NULL AUTO_INCREMENT,
+  `nagios_date` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `contact` longtext COLLATE utf8_bin,
+  `host` longtext COLLATE utf8_bin,
+  `service` longtext COLLATE utf8_bin,
+  `state` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `notification_number` int(11) DEFAULT NULL,
+  `method` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `priority` tinyint(1) DEFAULT NULL,
+  `matched_rule` longtext COLLATE utf8_bin,
+  `exit_code` tinyint(1) DEFAULT NULL,
+  `exit_command` longtext COLLATE utf8_bin,
+  `epoch` int(255) unsigned DEFAULT NULL,
+  `cmd_duration` int(255) unsigned DEFAULT NULL,
+  `notifier_duration` int(255) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
