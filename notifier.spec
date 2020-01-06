@@ -1,7 +1,7 @@
 Summary:   RGM Advanced Notifier
 Name:      notifier
 Version:   2.1.3
-Release:   6.rgm
+Release:   7.rgm
 BuildRoot: /tmp/%{name}-%{version}
 Group:     Applications/Base
 #BuildArch: noarch
@@ -111,6 +111,12 @@ done
 %attr (775,%{rgm_user_nagios},%{rgm_group}) %{rgm_path}/%{name}/log/
 
 %changelog
+* Thu Jan 06 2020 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-7.rgm
+- fix SQL AUTO_INCREMENT in schema
+
+* Thu Dec 30 2019 Eric Belhomme <ebelhomme@fr.scc.com> - 2.1.3-6.rgm
+- fix SQL schema
+
 * Thu Nov 21 2019 Vincent Fricou <vincent@fricouv.eu> - 2.1.3-5.rgm
 - fix payload for slack notification scripts
 

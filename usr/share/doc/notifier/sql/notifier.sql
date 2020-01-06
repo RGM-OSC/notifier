@@ -19,7 +19,7 @@ CREATE TABLE `configs` (
   `type` varchar(255) COLLATE utf8_bin NOT NULL,
   `value` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 LOCK TABLES `configs` WRITE;
 /*!40000 ALTER TABLE `configs` DISABLE KEYS */;
@@ -42,7 +42,7 @@ CREATE TABLE `timeperiods` (
   `daysofweek` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
   `timeperiod` varchar(255) COLLATE utf8_bin NOT NULL DEFAULT '*',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 LOCK TABLES `timeperiods` WRITE;
 /*!40000 ALTER TABLE `timeperiods` DISABLE KEYS */;
@@ -60,7 +60,7 @@ CREATE TABLE `methods` (
   `type` varchar(255) COLLATE utf8_bin NOT NULL,
   `line` text COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 LOCK TABLES `methods` WRITE;
 /*!40000 ALTER TABLE `methods` DISABLE KEYS */;
@@ -110,7 +110,7 @@ CREATE TABLE `rules` (
   PRIMARY KEY (`id`),
   KEY `timeperiod_id` (`timeperiod_id`),
   CONSTRAINT `rules_ibfk_1` FOREIGN KEY (`timeperiod_id`) REFERENCES `timeperiods` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /*!40101 SET character_set_client = @saved_cs_client */;
 LOCK TABLES `rules` WRITE;
 /*!40000 ALTER TABLE `rules` DISABLE KEYS */;
